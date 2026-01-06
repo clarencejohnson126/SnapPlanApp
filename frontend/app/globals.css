@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles for Blueprint Pro theme */
+@layer base {
+  :root {
+    --primary-bg: #1E3A5F;
+    --card-bg: #274060;
+    --accent-teal: #00D4AA;
+  }
+
+  body {
+    @apply bg-bg-primary text-text-primary antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-white/20 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-white/30;
+  }
+}
+
+/* Component layer for reusable patterns */
+@layer components {
+  /* Fire rating badges */
+  .badge-fire-t90 {
+    @apply bg-red-500/20 text-red-400 border border-red-500/30;
+  }
+
+  .badge-fire-t30 {
+    @apply bg-amber-500/20 text-amber-400 border border-amber-500/30;
+  }
+
+  .badge-fire-dss {
+    @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
+  }
+
+  .badge-fire-std {
+    @apply bg-white/10 text-gray-400 border border-white/10;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent-teal to-accent-blue bg-clip-text text-transparent;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-bg-card rounded-xl border border-white/5 shadow-card;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:bg-bg-hover active:scale-[0.98];
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-accent-teal focus:ring-offset-2 focus:ring-offset-bg-primary;
+  }
+
+  /* Stat card */
+  .stat-card {
+    @apply bg-bg-card p-4 rounded-xl border border-white/5 shadow-card;
+  }
+
+  /* Teal button */
+  .btn-teal {
+    @apply bg-accent-teal text-[#06241E] font-bold shadow-teal hover:brightness-110 active:scale-95 transition-all;
+  }
+}
+
+/* Utility layer */
+@layer utilities {
+  /* Hide scrollbar */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Text shadows */
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Animate pulse for processing */
+  .animate-scan {
+    animation: scan 2s ease-in-out infinite;
+  }
+
+  @keyframes scan {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translateY(100%);
+      opacity: 1;
+    }
+  }
+}

@@ -1,0 +1,35 @@
+# SnapGrid Backend Dependencies
+
+# Web framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+
+# Settings management
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+
+# PDF processing
+pdfplumber>=0.10.0
+PyMuPDF>=1.23.0  # fitz - for vector extraction and page rendering
+Pillow>=10.0.0   # Image handling for rendered pages
+
+# File handling
+python-multipart>=0.0.6  # For file uploads
+
+# Database & Storage (optional - for Supabase persistence)
+supabase>=2.0.0
+
+# Computer Vision
+opencv-python>=4.8.0  # Image processing
+ultralytics>=8.0.0    # YOLO object detection (optional - local CV)
+httpx>=0.25.0         # HTTP client for Roboflow API
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+httpx>=0.25.0  # For async test client
+
+# Development
+black>=23.0.0
+ruff>=0.1.0

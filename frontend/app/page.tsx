@@ -1,0 +1,234 @@
+import Link from "next/link";
+
+export default function LandingPage() {
+  return (
+    <div className="min-h-screen bg-[#0F1B2A]">
+      {/* Blueprint background pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 212, 170, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 212, 170, 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: "50px 50px",
+        }}
+      />
+
+      {/* Header */}
+      <header className="relative z-10 border-b border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#00D4AA]/10 flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-[#00D4AA]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                />
+              </svg>
+            </div>
+            <span className="text-xl font-bold text-white">SnapPlan</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/auth/login"
+              className="text-[#94A3B8] hover:text-white transition-colors"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/auth/signup"
+              className="px-4 py-2 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 transition-colors"
+            >
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <main className="relative z-10">
+        <div className="max-w-7xl mx-auto px-6 py-24 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight">
+            Extract construction data with{" "}
+            <span className="text-[#00D4AA]">zero hallucination</span>
+          </h1>
+          <p className="text-xl text-[#94A3B8] mt-6 max-w-2xl mx-auto">
+            Deterministic extraction of room areas, door schedules, and measurements
+            from German construction documents. 100% traceability, full audit trail.
+          </p>
+          <div className="flex items-center justify-center gap-4 mt-10">
+            <Link
+              href="/auth/signup"
+              className="px-6 py-3 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 transition-colors"
+            >
+              Start Free Trial
+            </Link>
+            <Link
+              href="#features"
+              className="px-6 py-3 rounded-lg border border-white/10 text-white hover:border-white/20 transition-colors"
+            >
+              Learn More
+            </Link>
+          </div>
+        </div>
+
+        {/* Features */}
+        <div id="features" className="max-w-7xl mx-auto px-6 py-24">
+          <h2 className="text-3xl font-bold text-white text-center mb-16">
+            Built for German Construction Documents
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-[#1A2942] rounded-xl border border-white/5 p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#00D4AA]/10 flex items-center justify-center mb-6">
+                <svg
+                  className="w-6 h-6 text-[#00D4AA]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">
+                NRF Area Extraction
+              </h3>
+              <p className="text-[#94A3B8]">
+                Extract room areas from CAD floor plans. Automatic detection of
+                NRF (Netto-Raumfläche) values with German decimal comma support.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-[#1A2942] rounded-xl border border-white/5 p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center mb-6">
+                <svg
+                  className="w-6 h-6 text-[#3B82F6]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">
+                Full Audit Trail
+              </h3>
+              <p className="text-[#94A3B8]">
+                Every extracted value traces back to its source. Page number,
+                bounding box, raw text, and confidence score included.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-[#1A2942] rounded-xl border border-white/5 p-8">
+              <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/10 flex items-center justify-center mb-6">
+                <svg
+                  className="w-6 h-6 text-[#F59E0B]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">
+                Balcony Factor
+              </h3>
+              <p className="text-[#94A3B8]">
+                Automatic detection of Balkon, Terrasse, and Loggia with
+                configurable area factors. Standard 0.5 factor applied.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div className="max-w-7xl mx-auto px-6 py-24">
+          <div className="bg-gradient-to-r from-[#1A2942] to-[#243B53] rounded-2xl p-12 text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Ready to automate your quantity takeoff?
+            </h2>
+            <p className="text-[#94A3B8] max-w-xl mx-auto mb-8">
+              Join construction professionals who trust SnapPlan for accurate,
+              traceable document analysis.
+            </p>
+            <Link
+              href="/auth/signup"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 transition-colors"
+            >
+              Get Started Free
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="relative z-10 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-[#00D4AA]/10 flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-[#00D4AA]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"
+                  />
+                </svg>
+              </div>
+              <span className="text-sm text-[#64748B]">
+                SnapPlan - Construction Document Analysis
+              </span>
+            </div>
+            <p className="text-sm text-[#64748B]">
+              Zero hallucination. Full traceability.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
