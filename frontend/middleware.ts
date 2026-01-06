@@ -1,14 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import createIntlMiddleware from "next-intl/middleware";
-import { locales, defaultLocale } from "./i18n";
-
-// Create i18n middleware
-const intlMiddleware = createIntlMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: "as-needed",
-});
 
 // Routes that require authentication
 const protectedRoutes = ["/app"];
@@ -94,12 +85,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Apply i18n middleware for locale routing
-  // Skip i18n for /app routes (they don't use locale prefix)
-  if (!pathname.startsWith("/app") && !pathname.startsWith("/auth")) {
-    return intlMiddleware(request);
-  }
-
+  // For now, skip i18n middleware to simplify routing
+  // The landing page and auth pages don't need locale prefixes
   return response;
 }
 
