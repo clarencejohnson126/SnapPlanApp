@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { useTranslations } from 'next-intl'
 import {
   Table,
   TableHeader,
@@ -37,8 +36,6 @@ type SortField = 'door_number' | 'room' | 'width_m' | 'height_m' | 'category' | 
 type SortDirection = 'asc' | 'desc'
 
 export function DoorTable({ items, showAuditInfo = false }: DoorTableProps) {
-  const t = useTranslations('doors')
-
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('door_number')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
@@ -107,7 +104,7 @@ export function DoorTable({ items, showAuditInfo = false }: DoorTableProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
           </svg>
         }
-        title={t('noDoorsFound') || 'No doors found'}
+        title="No doors found"
         description="Upload a door schedule to extract door data"
       />
     )
@@ -119,14 +116,14 @@ export function DoorTable({ items, showAuditInfo = false }: DoorTableProps) {
       <div className="flex flex-wrap items-center gap-4">
         <div className="flex-1 min-w-[200px] max-w-sm">
           <Input
-            placeholder={`${t('search')} ${t('doorId')}, ${t('room')}...`}
+            placeholder="Search Door ID, Room..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-text-secondary">{t('fireRating')}:</span>
+          <span className="text-sm text-text-secondary">Fire Rating:</span>
           <div className="flex gap-1">
             <button
               onClick={() => setCategoryFilter(null)}
@@ -165,36 +162,36 @@ export function DoorTable({ items, showAuditInfo = false }: DoorTableProps) {
                 sorted={sortField === 'door_number' ? sortDirection : null}
                 onSort={() => handleSort('door_number')}
               >
-                {t('doorId')}
+                Door ID
               </TableHead>
               <TableHead
                 sortable
                 sorted={sortField === 'room' ? sortDirection : null}
                 onSort={() => handleSort('room')}
               >
-                {t('room')}
+                Room
               </TableHead>
-              <TableHead>{t('type')}</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead
                 sortable
                 sorted={sortField === 'width_m' ? sortDirection : null}
                 onSort={() => handleSort('width_m')}
               >
-                {t('width')}
+                Width
               </TableHead>
               <TableHead
                 sortable
                 sorted={sortField === 'height_m' ? sortDirection : null}
                 onSort={() => handleSort('height_m')}
               >
-                {t('height')}
+                Height
               </TableHead>
               <TableHead
                 sortable
                 sorted={sortField === 'category' ? sortDirection : null}
                 onSort={() => handleSort('category')}
               >
-                {t('rating')}
+                Rating
               </TableHead>
               {showAuditInfo && (
                 <TableHead
