@@ -1,22 +1,10 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { Sidebar, Topbar } from "@/components/app";
 
-export default async function AppLayout({
+export default function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/auth/login");
-  }
-
   return (
     <div className="min-h-screen bg-[#0F1B2A]">
       {/* Sidebar */}
@@ -25,7 +13,7 @@ export default async function AppLayout({
       {/* Main Content Area */}
       <div className="ml-60 min-h-screen flex flex-col">
         {/* Topbar */}
-        <Topbar userEmail={user.email} />
+        <Topbar userEmail="guest@snapplan.app" />
 
         {/* Page Content */}
         <main className="flex-1 p-6">{children}</main>

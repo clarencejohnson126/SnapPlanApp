@@ -7,25 +7,25 @@
  * - Server Actions
  *
  * Creates a new client for each request with proper cookie handling.
+ * Returns null if Supabase is not configured.
  */
 
-import { createServerClient } from "@supabase/ssr";
+import { createServerClient as createSupabaseServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "./types";
 
 export async function createClient() {
-  const cookieStore = await cookies();
-
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  // Return null if Supabase is not configured (MVP mode without auth)
   if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables"
-    );
+    return null;
   }
 
-  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+  const cookieStore = await cookies();
+
+  return createSupabaseServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();

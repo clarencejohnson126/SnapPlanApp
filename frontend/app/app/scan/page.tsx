@@ -22,14 +22,19 @@ import {
   AlertCircle,
   Download,
   ChevronRight,
+  ChevronDown,
   Loader2,
   BarChart3,
   Table,
   Info,
+  FileSpreadsheet,
+  FileDown,
 } from "lucide-react";
 import {
   extractRooms,
   exportToExcel,
+  exportToCSV,
+  generateCSV,
   formatArea,
   formatNumber,
   getCategoryDisplayName,
@@ -64,6 +69,7 @@ export default function ScanPage() {
   const [selectedRoom, setSelectedRoom] = useState<ExtractedRoom | null>(null);
   const [activeTab, setActiveTab] = useState<ResultTab>("table");
   const [isExporting, setIsExporting] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   // Handle file drop
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -99,25 +105,139 @@ export default function ScanPage() {
     }
   };
 
-  // Export to Excel
-  const handleExport = async () => {
-    if (!result) return;
+  // Download helper
+  const downloadBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
+  // Export to Excel
+  const handleExportExcel = async () => {
+    if (!result) return;
     setIsExporting(true);
+    setShowExportMenu(false);
     try {
       const blob = await exportToExcel(result, file?.name || "SnapPlan Export");
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${file?.name?.replace(".pdf", "") || "snapplan"}-export.xlsx`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      downloadBlob(blob, `${file?.name?.replace(".pdf", "") || "snapplan"}-export.xlsx`);
     } catch (err) {
-      console.error("Export failed:", err);
+      console.error("Excel export failed:", err);
     } finally {
       setIsExporting(false);
+    }
+  };
+
+  // Export to CSV
+  const handleExportCSV = async () => {
+    if (!result) return;
+    setIsExporting(true);
+    setShowExportMenu(false);
+    try {
+      // Try backend first, fallback to client-side
+      let blob: Blob;
+      try {
+        blob = await exportToCSV(result);
+      } catch {
+        blob = generateCSV(result);
+      }
+      downloadBlob(blob, `${file?.name?.replace(".pdf", "") || "snapplan"}-export.csv`);
+    } catch (err) {
+      console.error("CSV export failed:", err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Export to PDF (client-side table generation)
+  const handleExportPDF = () => {
+    if (!result) return;
+    setShowExportMenu(false);
+
+    // Create printable HTML
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>SnapPlan Export - ${file?.name || 'Report'}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; }
+            h1 { color: #0F1B2A; margin-bottom: 10px; }
+            h2 { color: #64748B; font-weight: normal; margin-top: 0; }
+            .summary { display: flex; gap: 40px; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 8px; }
+            .summary-item { }
+            .summary-label { color: #64748B; font-size: 14px; }
+            .summary-value { font-size: 28px; font-weight: bold; color: #0F1B2A; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th { background: #0F1B2A; color: white; text-align: left; padding: 12px 8px; font-size: 12px; }
+            td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+            tr:nth-child(even) { background: #f8fafc; }
+            .number { text-align: right; font-family: monospace; }
+            .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #94A3B8; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <h1>Room Area Report</h1>
+          <h2>${file?.name || 'SnapPlan Export'}</h2>
+
+          <div class="summary">
+            <div class="summary-item">
+              <div class="summary-label">Total Rooms</div>
+              <div class="summary-value">${result.room_count}</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Total Area</div>
+              <div class="summary-value">${result.total_area_m2.toFixed(2)} m²</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Counted Area</div>
+              <div class="summary-value">${result.total_counted_m2.toFixed(2)} m²</div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Room Number</th>
+                <th>Room Name</th>
+                <th>Category</th>
+                <th class="number">Area (m²)</th>
+                <th class="number">Factor</th>
+                <th class="number">Counted (m²)</th>
+                <th class="number">Page</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${result.rooms.map(room => `
+                <tr>
+                  <td>${room.room_number}</td>
+                  <td>${room.room_name}</td>
+                  <td>${getCategoryDisplayName(room.category)}</td>
+                  <td class="number">${room.area_m2.toFixed(2)}</td>
+                  <td class="number">${(room.factor * 100).toFixed(0)}%</td>
+                  <td class="number">${room.counted_m2.toFixed(2)}</td>
+                  <td class="number">${room.page}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div class="footer">
+            Generated by SnapPlan on ${new Date().toLocaleDateString('de-DE')} at ${new Date().toLocaleTimeString('de-DE')}
+          </div>
+        </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.print();
     }
   };
 
@@ -172,18 +292,56 @@ export default function ScanPage() {
             >
               New Scan
             </button>
-            <button
-              onClick={handleExport}
-              disabled={isExporting}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 disabled:opacity-50 transition-colors"
-            >
-              {isExporting ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Download className="w-5 h-5" />
+            {/* Export Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setShowExportMenu(!showExportMenu)}
+                disabled={isExporting}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 disabled:opacity-50 transition-colors"
+              >
+                {isExporting ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Download className="w-5 h-5" />
+                )}
+                Export
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              {showExportMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-[#1A2942] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden">
+                  <button
+                    onClick={handleExportExcel}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white hover:bg-white/5 transition-colors"
+                  >
+                    <FileSpreadsheet className="w-5 h-5 text-[#10B981]" />
+                    <div>
+                      <div className="font-medium">Excel</div>
+                      <div className="text-xs text-[#64748B]">.xlsx file</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={handleExportCSV}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white hover:bg-white/5 transition-colors border-t border-white/5"
+                  >
+                    <FileDown className="w-5 h-5 text-[#3B82F6]" />
+                    <div>
+                      <div className="font-medium">CSV</div>
+                      <div className="text-xs text-[#64748B]">.csv file</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={handleExportPDF}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-left text-white hover:bg-white/5 transition-colors border-t border-white/5"
+                  >
+                    <FileText className="w-5 h-5 text-[#EF4444]" />
+                    <div>
+                      <div className="font-medium">PDF</div>
+                      <div className="text-xs text-[#64748B]">Print to PDF</div>
+                    </div>
+                  </button>
+                </div>
               )}
-              Export Excel
-            </button>
+            </div>
           </div>
         )}
       </div>

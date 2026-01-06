@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import { LanguageToggle } from "./LanguageToggle";
 import { UserMenu } from "./UserMenu";
 import { ProjectSelector } from "./ProjectSelector";
@@ -15,33 +13,16 @@ interface TopbarProps {
 
 export function Topbar({ userEmail, projectName, projectId }: TopbarProps) {
   const router = useRouter();
-  const supabase = createClient();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await supabase.auth.signOut();
-      router.push("/");
-      router.refresh();
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      setIsLoggingOut(false);
-    }
+    router.push("/");
   };
 
   return (
     <header className="sticky top-0 h-16 bg-[#0F1B2A] border-b border-white/5 flex items-center justify-between px-6 z-30">
       {/* Left: Project Selector */}
       <div className="flex items-center gap-4">
-        {projectId ? (
-          <ProjectSelector currentProjectId={projectId} currentProjectName={projectName} />
-        ) : (
-          <div className="text-white/60 text-sm">
-            Select a project to get started
-          </div>
-        )}
+        <ProjectSelector currentProjectId={projectId} currentProjectName={projectName} />
       </div>
 
       {/* Right: Language Toggle + User Menu */}
@@ -50,7 +31,7 @@ export function Topbar({ userEmail, projectName, projectId }: TopbarProps) {
         <UserMenu
           email={userEmail}
           onLogout={handleLogout}
-          isLoggingOut={isLoggingOut}
+          isLoggingOut={false}
         />
       </div>
     </header>

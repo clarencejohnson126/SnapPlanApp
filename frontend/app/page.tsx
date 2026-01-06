@@ -38,16 +38,10 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-4">
             <Link
-              href="/auth/login"
-              className="text-[#94A3B8] hover:text-white transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/auth/signup"
+              href="/app/scan"
               className="px-4 py-2 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 transition-colors"
             >
-              Get Started
+              Try Now
             </Link>
           </div>
         </div>
@@ -66,10 +60,10 @@ export default function LandingPage() {
           </p>
           <div className="flex items-center justify-center gap-4 mt-10">
             <Link
-              href="/auth/signup"
+              href="/app/scan"
               className="px-6 py-3 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 transition-colors"
             >
-              Start Free Trial
+              Upload Blueprint
             </Link>
             <Link
               href="#features"
@@ -177,10 +171,10 @@ export default function LandingPage() {
               traceable document analysis.
             </p>
             <Link
-              href="/auth/signup"
+              href="/app/scan"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[#00D4AA] text-[#0F1B2A] font-semibold hover:bg-[#00D4AA]/90 transition-colors"
             >
-              Get Started Free
+              Start Scanning
               <svg
                 className="w-5 h-5"
                 fill="none"

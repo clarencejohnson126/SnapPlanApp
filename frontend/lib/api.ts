@@ -167,6 +167,38 @@ export async function exportToCSV(extractionData: ExtractionResult): Promise<Blo
   return response.blob();
 }
 
+// Export to PDF
+export async function exportToPDF(
+  extractionData: ExtractionResult,
+  projectName: string = 'SnapPlan Export'
+): Promise<Blob> {
+  const response = await fetch(`${API_BASE}/api/v1/extraction/export/pdf?project_name=${encodeURIComponent(projectName)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(extractionData),
+  });
+
+  if (!response.ok) throw new Error('PDF Export failed');
+  return response.blob();
+}
+
+// Client-side CSV export (fallback when backend unavailable)
+export function generateCSV(extractionData: ExtractionResult): Blob {
+  const headers = ['Room Number', 'Room Name', 'Area (m²)', 'Counted (m²)', 'Factor', 'Category', 'Page'];
+  const rows = extractionData.rooms.map(room => [
+    room.room_number,
+    room.room_name,
+    room.area_m2.toFixed(2),
+    room.counted_m2.toFixed(2),
+    room.factor.toString(),
+    room.category,
+    room.page.toString(),
+  ]);
+
+  const csvContent = [headers.join(','), ...rows.map(row => row.map(cell => `"${cell}"`).join(','))].join('\n');
+  return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+}
+
 // Get room categories
 export async function getRoomCategories(): Promise<{ categories: string[] }> {
   const response = await fetch(`${API_BASE}/api/v1/extraction/categories`);
